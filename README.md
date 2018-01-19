@@ -2,6 +2,8 @@
 
 > Frontend interface for the management of Go Links
 
+[![Build Status](https://travis-ci.org/squarshednanners/go-links-ui.svg?branch=master)](https://travis-ci.org/squarshednanners/go-links-ui)
+
 ## Build Setup
 
 ``` bash
