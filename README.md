@@ -31,4 +31,4 @@ npm test
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-Check out the backend code at: Check out the backend code at: https://github.com/squarshednanners/go-links-rest
+Check out the backend code at: https://github.com/squarshednanners/go-links-rest
