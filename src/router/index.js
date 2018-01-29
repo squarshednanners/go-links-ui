@@ -9,6 +9,7 @@ import CreateUser from '@/components/users/CreateUser'
 import Account from '@/components/users/Account'
 import Login from '@/components/users/Login'
 import faq from '@/components/faq'
+import Dashboard from '@/components/Dashboard'
 
 import AuthService from '@/services/AuthService'
 import AlertService from '@/services/AlertService'
@@ -23,9 +24,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Links',
-      component: Links,
-      meta: { requiresLogin: true, requiresAdmin: false }
+      redirect: '/links'
     },
     {
       path: '/links',
@@ -73,6 +72,12 @@ const router = new Router({
       name: 'faq',
       component: faq,
       meta: { requiresLogin: false, requiresAdmin: false }
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard,
+      meta: { requiresLogin: true, requiresAdmin: false }
     }
   ]
 })

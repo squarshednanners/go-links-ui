@@ -22,7 +22,14 @@
         <div v-if="isLoading">
           <b-row>
             <b-col offset="5" cols="2">
-              <div class="loader"></div>
+              <div class="loader">
+                <div class="orbit-spinner">
+                  <div class="orbit"></div>
+                  <div class="orbit"></div>
+                  <div class="orbit"></div>
+                </div>
+                Please Wait
+              </div>
             </b-col>
           </b-row>
         </div>
@@ -109,6 +116,9 @@ const linkService = new LinkService()
 export default {
   data() {
     return {
+      background: {
+        default: '#ffffff'
+      },
       linkTable: {
         fields: [
           { key: 'name', sortable: true },
@@ -138,7 +148,7 @@ export default {
   },
   mounted() {
     this.linkTable.filter = this.$route.query.name
-    this.$nextTick(function() {
+    this.$nextTick(() => {
       this.getLinks()
     })
   },

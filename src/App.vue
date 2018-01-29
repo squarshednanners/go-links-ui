@@ -8,6 +8,7 @@
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
+          <b-nav-item v-if="auth.isAuthenticated()" to="dashboard">Dashboard</b-nav-item>
           <b-nav-item v-if="auth.isAuthenticated()" to="links">Links</b-nav-item>
           <b-nav-item v-if="auth.isAdmin()" to="users">Users</b-nav-item>
           <b-nav-item v-if="auth.isAdmin()" to="logs">Logs</b-nav-item>
@@ -92,28 +93,91 @@ export default {
   margin-top: 10px;
 }
 
-.loader {
-  border-top: 16px solid blue;
-  border-right: 16px solid green;
-  border-bottom: 16px solid red;
-  border-left: 16px solid pink;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .input-group-btn:not(:first-child):not(:last-child) > .btn {
   border-radius: 0;
   height: 100%;
+}
+.loader {
+  margin: 0 auto;
+  text-align: center;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+}
+
+.inlineLoader {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.orbit-spinner {
+  margin: 0 auto;
+}
+
+.orbit-spinner * {
+  box-sizing: border-box;
+}
+
+.orbit-spinner {
+  height: 55px;
+  width: 55px;
+  border-radius: 50%;
+  perspective: 800px;
+}
+
+.orbit-spinner .orbit {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.orbit-spinner .orbit:nth-child(1) {
+  left: 0%;
+  top: 0%;
+  animation: orbit-spinner-orbit-one-animation 1200ms linear infinite;
+  border-bottom: 3px solid #ff1d5e;
+}
+
+.orbit-spinner .orbit:nth-child(2) {
+  right: 0%;
+  top: 0%;
+  animation: orbit-spinner-orbit-two-animation 1200ms linear infinite;
+  border-right: 3px solid #2c1dff;
+}
+
+.orbit-spinner .orbit:nth-child(3) {
+  right: 0%;
+  bottom: 0%;
+  animation: orbit-spinner-orbit-three-animation 1200ms linear infinite;
+  border-top: 3px solid #9dff1d;
+}
+
+@keyframes orbit-spinner-orbit-one-animation {
+  0% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+  }
+}
+
+@keyframes orbit-spinner-orbit-two-animation {
+  0% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+  }
+}
+
+@keyframes orbit-spinner-orbit-three-animation {
+  0% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+  }
 }
 </style>
