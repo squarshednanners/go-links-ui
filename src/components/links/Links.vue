@@ -60,8 +60,8 @@
               <template slot="name" slot-scope="data">
                 {{data.value}}
                 <span style="float:right;">
-                  <b-link v-clipboard:copy="generateGoLinkUrl(data.value)" size="sm">
-                    copy
+                  <b-link v-b-tooltip.hover title="Copy" v-clipboard:copy="generateGoLinkUrl(data.value)" size="sm">
+                     <font-awesome-icon :icon="icon" />
                   </b-link>
                 </span>
               </template>
@@ -108,8 +108,11 @@
 
 <script>
 import LinkService from '@/services/LinkService'
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import faCopy from '@fortawesome/fontawesome-free-solid/faCopy'
 const linkService = new LinkService()
 export default {
+  components: { FontAwesomeIcon },
   data() {
     return {
       background: {
@@ -151,6 +154,9 @@ export default {
   computed: {
     displayParams() {
       return this.linkTable.displayParams
+    },
+    icon() {
+      return faCopy
     }
   },
   watch: {
