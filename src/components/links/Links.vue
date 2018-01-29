@@ -42,20 +42,20 @@
           </b-row>
           <br />
           <b-row>
-            <b-col cols="1">
+            <b-col xs="12" sm="3" md="2" lg="1">
               <span v-if="linkTable.currentCount !== linkTable.data.length">{{linkTable.currentCount}}/</span>{{linkTable.data.length}}&nbsp;Link(s)</b-col>
-            <b-col cols="4">
+            <b-col xs="12" sm="6" md="5" lg="4">
               <b-form-input v-model="linkTable.filter" type="text" placeholder="Link Filter"></b-form-input>
             </b-col>
-            <b-col cols="1">
+            <b-col xs="12" sm="3" md="2" lg="1">
               <b-btn variant="primary" size="sm" v-on:click="clearAll()">Clear</b-btn>
             </b-col>
-            <b-col cols="2">
+            <b-col xs="12" sm="4" md="3" lg="2">
               <b-form-checkbox id="displayParamsCheckbox" v-model="linkTable.displayParams">
                 Show Params
               </b-form-checkbox>
             </b-col>
-            <b-col>
+            <b-col xs="12" sm="8" md="12" lg="4">
               <b-pagination v-model="linkTable.currentPage" :per-page="10" :total-rows="linkTable.currentCount" align="right" size="md"></b-pagination>
             </b-col>
           </b-row>

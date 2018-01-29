@@ -40,15 +40,15 @@
       </b-row>
       <br />
       <b-row>
-        <b-col cols="2">
+        <b-col xs="12" sm="3" md="2" lg="2">
           <span v-if="userTable.currentCount !== userTable.data.length">{{userTable.currentCount}}/</span>{{userTable.data.length}}&nbsp;User(s)</b-col>
-        <b-col cols="4">
+        <b-col xs="12" sm="6" md="8" lg="4">
           <b-form-input v-model="userTable.filter" type="text" placeholder="User Filter"></b-form-input>
         </b-col>
-        <b-col cols="1">
+        <b-col xs="12" sm="3" md="2" lg="2">
           <b-btn variant="primary" size="sm" v-on:click="clearAll()">Clear</b-btn>
         </b-col>
-        <b-col>
+        <b-col xs="12" sm="12" md="12" lg="4">
           <b-pagination v-model="userTable.currentPage" :per-page="10" :total-rows="userTable.currentCount" align="right" size="md"></b-pagination>
         </b-col>
       </b-row>

@@ -19,7 +19,7 @@
     </b-row>
     <br />
     <b-row>
-      <b-col cols="8">
+      <b-col md="12" lg="8">
         <span style="text-align: center;">
           <h3>Top 25 Links</h3>
         </span>
@@ -37,7 +37,7 @@
           <bar-chart :chart-data="charts.topUsed" :options="defaultChartOptions" :height="600"></bar-chart>
         </div>
       </b-col>
-      <b-col cols="4">
+      <b-col md="12" lg="4">
         <span style="text-align: center;">
           <h3>All Used Links</h3>
         </span>
@@ -53,10 +53,10 @@
         </div>
         <div v-if="!totalSummary.isLoading">
           <b-row>
-            <b-col cols="5">
+            <b-col lg="12" xl="5">
               <b-form-input v-model="sortedLinkTable.filter" type="text" placeholder="Link Filter"></b-form-input>
             </b-col>
-            <b-col>
+            <b-col lg="12" xl="7">
               <b-pagination v-model="sortedLinkTable.currentPage" :per-page="10" :total-rows="sortedLinkTable.currentCount" align="right" size="md"></b-pagination>
             </b-col>
           </b-row>
@@ -66,7 +66,7 @@
       </b-col>
     </b-row>
     <b-row v-if="totalSummary.rawData">
-      <b-col offset="5">
+      <b-col offset-md="0" offset-lg="5">
         <i>* data derived from usage since {{totalSummary.rawData.startTime | date}}</i>
       </b-col>
     </b-row>
