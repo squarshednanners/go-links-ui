@@ -18,8 +18,4 @@ export default class LinkService {
       .then(successFunc)
       .catch(errorFunc)
   }
-
-  go(linkName) {
-    axios.get(`${process.env.API_URL}/api/go/${linkName}`)
-  }
 }

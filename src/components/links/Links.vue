@@ -20,18 +20,14 @@
     <b-row>
       <b-col>
         <div v-if="isLoading">
-          <b-row>
-            <b-col offset="5" cols="2">
-              <div class="loader">
-                <div class="orbit-spinner">
-                  <div class="orbit"></div>
-                  <div class="orbit"></div>
-                  <div class="orbit"></div>
-                </div>
-                Please Wait
-              </div>
-            </b-col>
-          </b-row>
+          <div class="loader">
+            <div class="orbit-spinner">
+              <div class="orbit"></div>
+              <div class="orbit"></div>
+              <div class="orbit"></div>
+            </div>
+            Please Wait
+          </div>
         </div>
         <div v-if="!isLoading">
           <br />
