@@ -67,6 +67,16 @@
         </b-col>
       </b-row>
     </div>
+    <b-modal ref="verifyCreateModal" hide-header hide-footer title="Existing/Similar Links Found">
+      <div class="d-block text-center">
+        <h3>Existing Links found</h3>
+        The following links have a matching or similar URL:
+        <b-table dark striped hover bordered :items="existingLinkTable.data" :fields="existingLinkTable.fields"></b-table>
+        Would you like to create the link anyway?
+        <b-button size="sm" v-on:click="verifyLinkCreation(true)" variant="primary">Yes</b-button>&nbsp;
+        <b-button size="sm" v-on:click="closeModal(true)" variant="secondary">No</b-button>
+      </div>
+    </b-modal>
   </b-container>
 </template>
 
@@ -78,7 +88,14 @@ export default {
     return {
       createLinkInput: { name: null, url: null },
       alerts: [],
-      isLoading: false
+      isLoading: false,
+      existingLinkTable: {
+        data: null,
+        fields: [
+          { key: 'name', label: 'Link Name' },
+          { key: 'url', label: 'URL' }
+        ]
+      }
     }
   },
   created() {
@@ -97,6 +114,28 @@ export default {
     createLink() {
       this.isLoading = true
       this.$alert.clearAlerts(this.alerts)
+      linkService.searchLinks(this.createLinkInput.url, response => {
+        if (response.data.successful) {
+          if (response.data.results.length === 0) {
+            this.verifyLinkCreation()
+          } else {
+            this.existingLinkTable.data = response.data.results
+            this.$refs.verifyCreateModal.show()
+          }
+        } else {
+          this.$alert.addAlertList(
+            this.alerts,
+            'danger',
+            response.data.messageList
+          )
+          this.isLoading = false
+        }
+      })
+    },
+    verifyLinkCreation(modalOpen) {
+      if (modalOpen) {
+        this.closeModal(false)
+      }
       linkService.createLink(
         this.createLinkInput,
         response => {
@@ -111,11 +150,20 @@ export default {
           }
           this.isLoading = false
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleError
       )
+    },
+    closeModal(stopLoading) {
+      this.$refs.verifyCreateModal.hide()
+      this.existingLinkTable.data = null
+      if (stopLoading) {
+        this.isLoading = false
+      }
+    },
+    handleError(e) {
+      this.closeModal()
+      this.$alert.addError(this.alerts, e)
+      this.isLoading = false
     }
   }
 }

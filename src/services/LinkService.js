@@ -18,4 +18,10 @@ export default class LinkService {
       .then(successFunc)
       .catch(errorFunc)
   }
+
+  searchLinks(searchString, successFunc, errorFunc) {
+    axios.post(`${process.env.API_URL}/api/go/search`, searchString, { headers: { 'Content-Type': 'text/plain' } })
+      .then(successFunc)
+      .catch(errorFunc)
+  }
 }

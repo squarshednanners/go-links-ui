@@ -61,7 +61,7 @@
                 {{data.value}}
                 <span style="float:right;">
                   <b-link v-b-tooltip.hover title="Copy" v-clipboard:copy="generateGoLinkUrl(data.value)" size="sm">
-                     <font-awesome-icon :icon="icon" />
+                    <font-awesome-icon :icon="icon" />
                   </b-link>
                 </span>
               </template>
@@ -103,6 +103,16 @@
         </div>
       </b-col>
     </b-row>
+    <b-modal ref="verifyCreateModal" hide-header hide-footer title="Existing/Similar Links Found">
+      <div class="d-block text-center">
+        <h3>Existing Links found</h3>
+        The following links have a matching or similar URL:
+        <b-table dark striped hover bordered :items="existingLinkTable.data" :fields="existingLinkTable.fields"></b-table>
+        Would you like to create the link anyway?
+        <b-button size="sm" v-on:click="verifyLinkCreation(true)" variant="primary">Yes</b-button>&nbsp;
+        <b-button size="sm" v-on:click="closeModal(true)" variant="secondary">No</b-button>
+      </div>
+    </b-modal>
   </b-container>
 </template>
 
@@ -136,6 +146,13 @@ export default {
         currentPage: 1,
         displayParams: false
       },
+      existingLinkTable: {
+        data: null,
+        fields: [
+          { key: 'name', label: 'Link Name' },
+          { key: 'url', label: 'URL' }
+        ]
+      },
       createLinkInput: {
         name: null,
         url: null,
@@ -168,33 +185,49 @@ export default {
     getLinks() {
       this.isLoading = true
       this.$alert.clearAlerts(this.alerts)
-      linkService.getAllLinks(
-        response => {
-          if (response.data.successful) {
-            this.$alert.addAlertList(
-              this.alerts,
-              'info',
-              response.data.messageList
-            )
-            this.linkTable.data = response.data.results
-          } else {
-            this.$alert.addAlertList(
-              this.alerts,
-              'danger',
-              response.data.messageList
-            )
-          }
-          this.isLoading = false
-        },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
+      linkService.getAllLinks(response => {
+        if (response.data.successful) {
+          this.$alert.addAlertList(
+            this.alerts,
+            'info',
+            response.data.messageList
+          )
+          this.linkTable.data = response.data.results
+        } else {
+          this.$alert.addAlertList(
+            this.alerts,
+            'danger',
+            response.data.messageList
+          )
         }
-      )
+        this.isLoading = false
+      }, this.handleError)
     },
     createLink() {
       this.isLoading = true
       this.$alert.clearAlerts(this.alerts)
+      linkService.searchLinks(this.createLinkInput.url, response => {
+        if (response.data.successful) {
+          if (response.data.results.length === 0) {
+            this.verifyLinkCreation()
+          } else {
+            this.existingLinkTable.data = response.data.results
+            this.$refs.verifyCreateModal.show()
+          }
+        } else {
+          this.$alert.addAlertList(
+            this.alerts,
+            'danger',
+            response.data.messageList
+          )
+          this.isLoading = false
+        }
+      })
+    },
+    verifyLinkCreation(modalOpen) {
+      if (modalOpen) {
+        this.closeModal(false)
+      }
       linkService.createLink(
         this.createLinkInput,
         response => {
@@ -215,11 +248,15 @@ export default {
           }
           this.isLoading = false
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleError
       )
+    },
+    closeModal(stopLoading) {
+      this.$refs.verifyCreateModal.hide()
+      this.existingLinkTable.data = null
+      if (stopLoading) {
+        this.isLoading = false
+      }
     },
     deleteLink(link) {
       this.isLoading = true
@@ -248,10 +285,7 @@ export default {
           }
           this.isLoading = false
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleError
       )
     },
     clearAll() {
@@ -280,6 +314,11 @@ export default {
     },
     generateGoLinkUrl(name) {
       return `${process.env.API_URL}/api/go/route/${name}`
+    },
+    handleError(e) {
+      this.closeModal(false)
+      this.$alert.addError(this.alerts, e)
+      this.isLoading = false
     }
   },
   filters: {

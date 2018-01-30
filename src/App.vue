@@ -101,8 +101,8 @@ export default {
   margin: 0 auto;
   text-align: center;
   position: fixed;
-  top: 30%;
-  left: 50%;
+  top: 40%;
+  left: 47%;
 }
 
 .inlineLoader {

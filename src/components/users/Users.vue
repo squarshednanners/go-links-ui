@@ -114,10 +114,7 @@ export default {
           }
           this.isLoading = false
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleErrorF
       )
     },
     deleteUser(user) {
@@ -150,10 +147,7 @@ export default {
           }
           this.isLoading = false
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleError
       )
     },
     activateUser(user, isActive) {
@@ -187,10 +181,7 @@ export default {
           }
           this.isLoading = false
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleError
       )
     },
     makeAdmin(user) {
@@ -224,10 +215,7 @@ export default {
           }
           this.isLoading = false
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+       this.handleError
       )
     },
     clearAll() {
@@ -238,6 +226,10 @@ export default {
     onFiltered(filteredItems) {
       this.userTable.currentCount = filteredItems.length
       this.userTable.currentPage = 1
+    },
+    handleError(e) {
+      this.$alert.addError(this.alerts, e)
+      this.isLoading = false
     }
   },
   filters: {
