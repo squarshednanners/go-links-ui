@@ -130,7 +130,7 @@ export default {
       },
       linkTable: {
         fields: [
-          { key: 'name', label: "Link Name", sortable: true },
+          { key: 'name', label: 'Link Name', sortable: true },
           { key: 'url', label: 'URL' },
           {
             key: 'parameter',
