@@ -108,7 +108,7 @@
         <h3>Existing Links found</h3>
         The following links have a matching or similar URL:
         <b-table dark striped hover bordered :items="existingLinkTable.data" :fields="existingLinkTable.fields"></b-table>
-        Would you like to create the link anyway?
+        Would you still like to create the link?
         <b-button size="sm" v-on:click="verifyLinkCreation(true)" variant="primary">Yes</b-button>&nbsp;
         <b-button size="sm" v-on:click="closeModal(true)" variant="secondary">No</b-button>
       </div>
@@ -256,6 +256,7 @@ export default {
       this.existingLinkTable.data = null
       if (stopLoading) {
         this.isLoading = false
+        this.clearCreateInput()
       }
     },
     deleteLink(link) {
