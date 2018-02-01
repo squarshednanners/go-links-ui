@@ -116,6 +116,16 @@
         </span>
       </b-col>
     </b-row>
+    <b-row v-if="hourlySummary.rawData && !hourlySummary.isLoading && hourlyEnabled">
+      <b-col offset-md="0" offset-lg="5">
+        <i>* data derived from usage since {{hourlySummary.rawData[0].startTime | time}}</i>
+      </b-col>
+    </b-row>
+    <b-row v-if="dailySummary.rawData && !dailySummary.isLoading && !hourlyEnabled">
+      <b-col offset-md="0" offset-lg="5">
+        <i>* data derived from usage since {{dailySummary.rawData[0].startTime | date}}</i>
+      </b-col>
+    </b-row>
     <br />
   </b-container>
 </template>
