@@ -38,20 +38,18 @@
           </b-row>
           <br />
           <b-row>
-            <b-col xs="12" sm="3" md="2" lg="1">
+            <b-col xs="12" sm="3" md="2" lg="2">
               <span v-if="linkTable.currentCount !== linkTable.data.length">{{linkTable.currentCount}}/</span>{{linkTable.data.length}}&nbsp;Link(s)</b-col>
-            <b-col xs="12" sm="6" md="5" lg="4">
+            <b-col xs="12" sm="6" md="6" lg="4">
               <b-form-input v-model="linkTable.filter" type="text" placeholder="Link Filter"></b-form-input>
             </b-col>
             <b-col xs="12" sm="3" md="2" lg="1">
               <b-btn variant="primary" size="sm" v-on:click="clearAll()">Clear</b-btn>
             </b-col>
-            <b-col xs="12" sm="4" md="3" lg="2">
-              <b-form-checkbox id="displayParamsCheckbox" v-model="linkTable.displayParams">
-                Show Params
-              </b-form-checkbox>
+            <b-col xs="12" sm="3" md="2" lg="1">
+              <switches v-model="linkTable.displayParams" theme="bootstrap" color="primary" label="Show Params"></switches>
             </b-col>
-            <b-col xs="12" sm="8" md="12" lg="4">
+            <b-col xs="12" sm="9" md="12" lg="4">
               <b-pagination v-model="linkTable.currentPage" :per-page="10" :total-rows="linkTable.currentCount" align="right" size="md"></b-pagination>
             </b-col>
           </b-row>
@@ -120,9 +118,10 @@
 import LinkService from '@/services/LinkService'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import faCopy from '@fortawesome/fontawesome-free-solid/faCopy'
+import Switches from 'vue-switches'
 const linkService = new LinkService()
 export default {
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, Switches },
   data() {
     return {
       background: {
