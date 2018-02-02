@@ -94,11 +94,13 @@ export default {
               'success',
               response.data.messageList
             )
-            this.$alert.addAlert(
-              this.alerts,
-              'info',
-              'Before you are able to login, please contact an admin to have your account activated'
-            )
+            if (!response.data.results.active) {
+              this.$alert.addAlert(
+                this.alerts,
+                'info',
+                'Before you are able to login, please contact an admin to have your account activated'
+              )
+            }
             this.clearCreateInput()
           } else {
             this.$alert.addAlertList(
