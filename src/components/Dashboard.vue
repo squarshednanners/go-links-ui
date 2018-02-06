@@ -33,8 +33,11 @@
             Loading Top Links
           </div>
         </div>
-        <div v-if="!totalSummary.isLoading">
+        <div v-if="!totalSummary.isLoading && charts.topUsed">
           <bar-chart :chart-data="charts.topUsed" :options="defaultChartOptions" :height="600"></bar-chart>
+        </div>
+        <div v-if="!charts.topUsed">
+          <b-alert show variant="warning">Top Used Link Data Not Available</b-alert>
         </div>
       </b-col>
       <b-col md="12" lg="4">
@@ -51,7 +54,7 @@
             Loading Used Links
           </div>
         </div>
-        <div v-if="!totalSummary.isLoading">
+        <div v-if="!totalSummary.isLoading && totalSummary.sortedLinkCountData">
           <b-row>
             <b-col lg="12" xl="5">
               <b-form-input v-model="sortedLinkTable.filter" type="text" placeholder="Link Filter"></b-form-input>
@@ -62,6 +65,9 @@
           </b-row>
           <b-table dark striped hover bordered :items="totalSummary.sortedLinkCountData" :fields="sortedLinkTable.fields" :current-page="sortedLinkTable.currentPage" :per-page="10" :filter="sortedLinkTable.filter" @filtered="onFiltered">
           </b-table>
+        </div>
+        <div v-if="!totalSummary.sortedLinkCountData">
+          <b-alert show variant="warning">Link Usage Data Not Available</b-alert>
         </div>
       </b-col>
     </b-row>
@@ -92,8 +98,11 @@
               Loading Hourly Summary
             </div>
           </div>
-          <div v-if="!hourlySummary.isLoading">
+          <div v-if="!hourlySummary.isLoading && charts.hourlyUsage">
             <hourly-chart :chart-data="charts.hourlyUsage" :options="defaultChartOptions" :height="600"></hourly-chart>
+          </div>
+          <div v-if="!charts.hourlyUsage">
+            <b-alert show variant="warning">No Hourly Usage Data available</b-alert>
           </div>
         </span>
         <span v-if="!hourlyEnabled">
@@ -110,18 +119,21 @@
               Loading Daily Summary
             </div>
           </div>
-          <div v-if="!dailySummary.isLoading">
+          <div v-if="!dailySummary.isLoading && charts.dailyUsage">
             <daily-chart :chart-data="charts.dailyUsage" :options="defaultChartOptions" :height="600"></daily-chart>
+          </div>
+          <div v-if="!charts.dailyUsage">
+            <b-alert show variant="warning">No Daily Usage Data available</b-alert>
           </div>
         </span>
       </b-col>
     </b-row>
-    <b-row v-if="hourlySummary.rawData && !hourlySummary.isLoading && hourlyEnabled">
+    <b-row v-if="hourlySummary.rawData && hourlySummary.rawData[0] && !hourlySummary.isLoading && hourlyEnabled">
       <b-col offset-md="0" offset-lg="5">
         <i>* data derived from usage since {{hourlySummary.rawData[0].startTime | time}}</i>
       </b-col>
     </b-row>
-    <b-row v-if="dailySummary.rawData && !dailySummary.isLoading && !hourlyEnabled">
+    <b-row v-if="dailySummary.rawData && dailySummary.rawData[0] && !dailySummary.isLoading && !hourlyEnabled">
       <b-col offset-md="0" offset-lg="5">
         <i>* data derived from usage since {{dailySummary.rawData[0].startTime | date}}</i>
       </b-col>
@@ -206,7 +218,7 @@ export default {
       this.totalSummary.isLoading = true
       summaryService.getTotalSummary(response => {
         this.parseSummaryResults(this.totalSummary, response)
-        if (response.data.successful) {
+        if (response.data.successful && this.totalSummary.rawData) {
           this.totalSummary.sortedLinkCountData = this.reverseSortNumericList(
             this.totalSummary.rawData.linkCountMap
           )
@@ -221,7 +233,8 @@ export default {
       this.dailySummary.isLoading = true
       summaryService.getDailySummary(response => {
         this.parseSummaryResults(this.dailySummary, response)
-        if (response.data.successful) {
+        if (response.data.successful && this.dailySummary.rawData.length > 0) {
+          console.log('why')
           this.charts.dailyUsage = this.buildUsageCountChart(
             this.dailySummary.rawData,
             this.$options.filters.date
@@ -234,7 +247,8 @@ export default {
       this.hourlySummary.isLoading = true
       summaryService.getHourlySummary(response => {
         this.parseSummaryResults(this.hourlySummary, response)
-        if (response.data.successful) {
+        if (response.data.successful && this.hourlySummary.rawData.length > 0) {
+          console.log('why')
           this.charts.hourlyUsage = this.buildUsageCountChart(
             this.hourlySummary.rawData,
             this.$options.filters.time
