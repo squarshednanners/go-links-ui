@@ -33,12 +33,14 @@
             Loading Top Links
           </div>
         </div>
-        <div v-if="!totalSummary.isLoading && charts.topUsed">
-          <bar-chart :chart-data="charts.topUsed" :options="defaultChartOptions" :height="600"></bar-chart>
-        </div>
-        <div v-if="!charts.topUsed">
-          <b-alert show variant="warning">Top Used Link Data Not Available</b-alert>
-        </div>
+        <span v-if="!totalSummary.isLoading">
+          <div v-if="charts.topUsed">
+            <bar-chart :chart-data="charts.topUsed" :options="defaultChartOptions" :height="600"></bar-chart>
+          </div>
+          <div v-if="!charts.topUsed">
+            <b-alert show variant="warning">Top Used Link Data Not Available</b-alert>
+          </div>
+        </span>
       </b-col>
       <b-col md="12" lg="4">
         <span style="text-align: center;">
@@ -54,21 +56,23 @@
             Loading Used Links
           </div>
         </div>
-        <div v-if="!totalSummary.isLoading && totalSummary.sortedLinkCountData">
-          <b-row>
-            <b-col lg="12" xl="5">
-              <b-form-input v-model="sortedLinkTable.filter" type="text" placeholder="Link Filter"></b-form-input>
-            </b-col>
-            <b-col lg="12" xl="7">
-              <b-pagination v-model="sortedLinkTable.currentPage" :per-page="10" :total-rows="sortedLinkTable.currentCount" align="right" size="md"></b-pagination>
-            </b-col>
-          </b-row>
-          <b-table dark striped hover bordered :items="totalSummary.sortedLinkCountData" :fields="sortedLinkTable.fields" :current-page="sortedLinkTable.currentPage" :per-page="10" :filter="sortedLinkTable.filter" @filtered="onFiltered">
-          </b-table>
-        </div>
-        <div v-if="!totalSummary.sortedLinkCountData">
-          <b-alert show variant="warning">Link Usage Data Not Available</b-alert>
-        </div>
+        <span v-if="!totalSummary.isLoading">
+          <div v-if="totalSummary.sortedLinkCountData">
+            <b-row>
+              <b-col lg="12" xl="5">
+                <b-form-input v-model="sortedLinkTable.filter" type="text" placeholder="Link Filter"></b-form-input>
+              </b-col>
+              <b-col lg="12" xl="7">
+                <b-pagination v-model="sortedLinkTable.currentPage" :per-page="10" :total-rows="sortedLinkTable.currentCount" align="right" size="md"></b-pagination>
+              </b-col>
+            </b-row>
+            <b-table dark striped hover bordered :items="totalSummary.sortedLinkCountData" :fields="sortedLinkTable.fields" :current-page="sortedLinkTable.currentPage" :per-page="10" :filter="sortedLinkTable.filter" @filtered="onFiltered">
+            </b-table>
+          </div>
+          <div v-if="!totalSummary.sortedLinkCountData">
+            <b-alert show variant="warning">Link Usage Data Not Available</b-alert>
+          </div>
+        </span>
       </b-col>
     </b-row>
     <b-row v-if="totalSummary.rawData">
@@ -98,12 +102,14 @@
               Loading Hourly Summary
             </div>
           </div>
-          <div v-if="!hourlySummary.isLoading && charts.hourlyUsage">
-            <hourly-chart :chart-data="charts.hourlyUsage" :options="defaultChartOptions" :height="600"></hourly-chart>
-          </div>
-          <div v-if="!charts.hourlyUsage">
-            <b-alert show variant="warning">No Hourly Usage Data available</b-alert>
-          </div>
+          <span v-if="!hourlySummary.isLoading">
+            <div v-if="charts.hourlyUsage">
+              <hourly-chart :chart-data="charts.hourlyUsage" :options="defaultChartOptions" :height="600"></hourly-chart>
+            </div>
+            <div v-if="!charts.hourlyUsage">
+              <b-alert show variant="warning">No Hourly Usage Data available</b-alert>
+            </div>
+          </span>
         </span>
         <span v-if="!hourlyEnabled">
           <span style="text-align: center;">
@@ -119,12 +125,14 @@
               Loading Daily Summary
             </div>
           </div>
-          <div v-if="!dailySummary.isLoading && charts.dailyUsage">
-            <daily-chart :chart-data="charts.dailyUsage" :options="defaultChartOptions" :height="600"></daily-chart>
-          </div>
-          <div v-if="!charts.dailyUsage">
-            <b-alert show variant="warning">No Daily Usage Data available</b-alert>
-          </div>
+          <span v-if="!dailySummary.isLoading">
+            <div v-if="charts.dailyUsage">
+              <daily-chart :chart-data="charts.dailyUsage" :options="defaultChartOptions" :height="600"></daily-chart>
+            </div>
+            <div v-if="!charts.dailyUsage">
+              <b-alert show variant="warning">No Daily Usage Data available</b-alert>
+            </div>
+          </span>
         </span>
       </b-col>
     </b-row>

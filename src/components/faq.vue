@@ -50,7 +50,7 @@
           <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
             <b-card-body>
               <p class="card-text">
-                To use a parameter, you can simply add a backspace after the go link name provided by the parameter value. Example (go link name "timesheet" param "50"):
+                To use a parameter, you can simply add a backslash after the go link name followed by the parameter value. Example (go link name "timesheet" param "50"):
                 <span style="font-weight: bold;">go timesheet/50</span><br /><br />Parameters can be configured as follows:
                 <br />
                 <table class="table b-table table-striped table-hover table-dark table-bordered">
