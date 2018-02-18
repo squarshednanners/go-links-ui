@@ -87,39 +87,41 @@ export default {
       this.$alert.clearAlerts(this.alerts)
       authService.createUser(
         this.createUserInput,
-        response => {
-          if (response.data.successful) {
-            this.$alert.addAlertList(
-              this.alerts,
-              'success',
-              response.data.messageList
-            )
-            if (!response.data.results.active) {
-              this.$alert.addAlert(
-                this.alerts,
-                'info',
-                'Before you are able to login, please contact an admin to have your account activated'
-              )
-            }
-            this.clearCreateInput()
-          } else {
-            this.$alert.addAlertList(
-              this.alerts,
-              'danger',
-              response.data.messageList
-            )
-          }
-          this.isLoading = false
-        },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleCreateUser,
+        this.handleError
       )
+    },
+    handleCreateUser({ data }) {
+      this.handleResponse(data, () => {
+        this.$alert.addAlertList(this.alerts, 'success', data.messageList)
+        if (!data.results.active) {
+          this.$alert.addAlert(
+            this.alerts,
+            'info',
+            'Before you are able to login, please contact an admin to have your account activated'
+          )
+        }
+        this.clearCreateInput()
+      })
     },
     clearCreateInput() {
       this.createUserInput.username = null
       this.createUserInput.password = null
+    },
+    handleResponse(data, successFunc) {
+      if (data.successful) {
+        successFunc()
+      } else {
+        this.handleBusinessError(data)
+      }
+      this.isLoading = false
+    },
+    handleBusinessError(data) {
+      this.$alert.addAlertList(this.alerts, 'danger', data.messageList)
+    },
+    handleError(e) {
+      this.$alert.addError(this.alerts, e)
+      this.isLoading = false
     }
   }
 }

@@ -114,23 +114,25 @@ export default {
     createLink() {
       this.isLoading = true
       this.$alert.clearAlerts(this.alerts)
-      linkService.searchLinks(this.createLinkInput.url, response => {
-        if (response.data.successful) {
-          if (response.data.results.length === 0) {
+      linkService.searchLinks(
+        this.createLinkInput.url,
+        this.handleLinkCreation,
+        this.handleError
+      )
+    },
+    handleLinkCreation({ data }) {
+      this.handleResponse(
+        data,
+        () => {
+          if (data.results.length === 0) {
             this.verifyLinkCreation()
           } else {
-            this.existingLinkTable.data = response.data.results
+            this.existingLinkTable.data = data.results
             this.$refs.verifyCreateModal.show()
           }
-        } else {
-          this.$alert.addAlertList(
-            this.alerts,
-            'danger',
-            response.data.messageList
-          )
-          this.isLoading = false
-        }
-      })
+        },
+        true
+      )
     },
     verifyLinkCreation(modalOpen) {
       if (modalOpen) {
@@ -138,20 +140,14 @@ export default {
       }
       linkService.createLink(
         this.createLinkInput,
-        response => {
-          if (response.data.successful) {
-            location.href = response.data.results.url
-          } else {
-            this.$alert.addAlertList(
-              this.alerts,
-              'danger',
-              response.data.messageList
-            )
-          }
-          this.isLoading = false
-        },
+        this.handleLinkVerification,
         this.handleError
       )
+    },
+    handleLinkVerification({ data }) {
+      this.handleResponse(data, () => {
+        location.href = data.results.url
+      })
     },
     closeModal(stopLoading) {
       this.$refs.verifyCreateModal.hide()
@@ -159,6 +155,22 @@ export default {
       if (stopLoading) {
         this.isLoading = false
       }
+    },
+    handleResponse(data, successFunc, removeLoadOnBusinessError) {
+      if (data.successful) {
+        successFunc()
+      } else {
+        this.handleBusinessError(data)
+        if (removeLoadOnBusinessError) {
+          this.isLoading = false
+        }
+      }
+      if (!removeLoadOnBusinessError) {
+        this.isLoading = false
+      }
+    },
+    handleBusinessError(data) {
+      this.$alert.addAlertList(this.alerts, 'danger', data.messageList)
     },
     handleError(e) {
       this.closeModal()

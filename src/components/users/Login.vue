@@ -96,15 +96,16 @@ export default {
           this.isLoading = false
           this.$router.push('/links')
         },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleError
       )
     },
     clearCreateInput() {
       this.loginUserInput.username = null
       this.loginUserInput.password = null
+    },
+    handleError(e) {
+      this.$alert.addError(this.alerts, e)
+      this.isLoading = false
     }
   }
 }

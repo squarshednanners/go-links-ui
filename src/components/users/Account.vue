@@ -71,28 +71,30 @@ export default {
       this.$alert.clearAlerts(this.alerts)
       userService.changePassword(
         this.newPassword,
-        response => {
-          if (response.data.successful) {
-            this.$alert.addAlertList(
-              this.alerts,
-              'success',
-              response.data.messageList
-            )
-            this.newPassword = null
-          } else {
-            this.$alert.addAlertList(
-              this.alerts,
-              'danger',
-              response.data.messageList
-            )
-          }
-          this.isLoading = false
-        },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
+        this.handleChangePassword,
+        this.handleError
       )
+    },
+    handleChangePassword({ data }) {
+      this.handleResponse(data, () => {
+        this.$alert.addAlertList(this.alerts, 'success', data.messageList)
+        this.newPassword = null
+      })
+    },
+    handleResponse(data, successFunc) {
+      if (data.successful) {
+        successFunc()
+      } else {
+        this.handleBusinessError(data)
+      }
+      this.isLoading = false
+    },
+    handleBusinessError(data) {
+      this.$alert.addAlertList(this.alerts, 'danger', data.messageList)
+    },
+    handleError(e) {
+      this.$alert.addError(this.alerts, e)
+      this.isLoading = false
     }
   }
 }

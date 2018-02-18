@@ -184,44 +184,36 @@ export default {
     getLinks() {
       this.isLoading = true
       this.$alert.clearAlerts(this.alerts)
-      linkService.getAllLinks(response => {
-        if (response.data.successful) {
-          this.$alert.addAlertList(
-            this.alerts,
-            'info',
-            response.data.messageList
-          )
-          this.linkTable.data = response.data.results
-        } else {
-          this.$alert.addAlertList(
-            this.alerts,
-            'danger',
-            response.data.messageList
-          )
-        }
-        this.isLoading = false
-      }, this.handleError)
+      linkService.getAllLinks(this.handleGetLinks, this.handleError)
+    },
+    handleGetLinks({ data }) {
+      this.handleResponse(data, () => {
+        this.$alert.addAlertList(this.alerts, 'info', data.messageList)
+        this.linkTable.data = data.results
+      })
     },
     createLink() {
       this.isLoading = true
       this.$alert.clearAlerts(this.alerts)
-      linkService.searchLinks(this.createLinkInput.url, response => {
-        if (response.data.successful) {
-          if (response.data.results.length === 0) {
+      linkService.searchLinks(
+        this.createLinkInput.url,
+        this.handleCreateLink,
+        this.handleError
+      )
+    },
+    handleCreateLink({ data }) {
+      this.handleResponse(
+        data,
+        () => {
+          if (data.results.length === 0) {
             this.verifyLinkCreation()
           } else {
-            this.existingLinkTable.data = response.data.results
+            this.existingLinkTable.data = data.results
             this.$refs.verifyCreateModal.show()
           }
-        } else {
-          this.$alert.addAlertList(
-            this.alerts,
-            'danger',
-            response.data.messageList
-          )
-          this.isLoading = false
-        }
-      })
+        },
+        true
+      )
     },
     verifyLinkCreation(modalOpen) {
       if (modalOpen) {
@@ -229,26 +221,16 @@ export default {
       }
       linkService.createLink(
         this.createLinkInput,
-        response => {
-          if (response.data.successful) {
-            this.$alert.addAlertList(
-              this.alerts,
-              'success',
-              response.data.messageList
-            )
-            this.linkTable.data.push(response.data.results)
-            this.clearCreateInput()
-          } else {
-            this.$alert.addAlertList(
-              this.alerts,
-              'danger',
-              response.data.messageList
-            )
-          }
-          this.isLoading = false
-        },
+        this.handleLinkVerification,
         this.handleError
       )
+    },
+    handleLinkVerification({ data }) {
+      this.handleResponse(data, () => {
+        this.$alert.addAlertList(this.alerts, 'success', data.messageList)
+        this.linkTable.data.push(data.results)
+        this.clearCreateInput()
+      })
     },
     closeModal(stopLoading) {
       this.$refs.verifyCreateModal.hide()
@@ -263,30 +245,20 @@ export default {
       this.$alert.clearAlerts(this.alerts)
       linkService.deleteLink(
         link.name,
-        response => {
-          if (response.data.successful) {
-            this.$alert.addAlertList(
-              this.alerts,
-              'success',
-              response.data.messageList
-            )
-            for (let i = 0; i < this.linkTable.data.length; i++) {
-              if (this.linkTable.data[i].name === response.data.results.name) {
-                this.linkTable.data.splice(i, 1)
-                break
-              }
-            }
-          } else {
-            this.$alert.addAlertList(
-              this.alerts,
-              'danger',
-              response.data.messageList
-            )
-          }
-          this.isLoading = false
-        },
+        this.handleLinkDeletion,
         this.handleError
       )
+    },
+    handleLinkDeletion({ data }) {
+      this.handleResponse(data, () => {
+        this.$alert.addAlertList(this.alerts, 'success', data.messageList)
+        for (let i = 0; i < this.linkTable.data.length; i++) {
+          if (this.linkTable.data[i].name === data.results.name) {
+            this.linkTable.data.splice(i, 1)
+            break
+          }
+        }
+      })
     },
     clearAll() {
       this.$alert.clearAlerts(this.alerts)
@@ -314,6 +286,22 @@ export default {
     },
     generateGoLinkUrl(name) {
       return `${process.env.API_URL}/api/go/route/${name}`
+    },
+    handleResponse(data, successFunc, removeLoadOnBusinessError) {
+      if (data.successful) {
+        successFunc()
+      } else {
+        this.handleBusinessError(data)
+        if (removeLoadOnBusinessError) {
+          this.isLoading = false
+        }
+      }
+      if (!removeLoadOnBusinessError) {
+        this.isLoading = false
+      }
+    },
+    handleBusinessError(data) {
+      this.$alert.addAlertList(this.alerts, 'danger', data.messageList)
     },
     handleError(e) {
       this.closeModal(false)

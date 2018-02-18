@@ -92,29 +92,28 @@ export default {
     getLogs() {
       this.isLoading = true
       this.$alert.clearAlerts(this.alerts)
-      logService.getAllLogs(
-        response => {
-          if (response.data.successful) {
-            this.$alert.addAlertList(
-              this.alerts,
-              'info',
-              response.data.messageList
-            )
-            this.logTable.data = response.data.results
-          } else {
-            this.$alert.addAlertList(
-              this.alerts,
-              'danger',
-              response.data.messageList
-            )
-          }
-          this.isLoading = false
-        },
-        e => {
-          this.$alert.addError(this.alerts, e)
-          this.isLoading = false
-        }
-      )
+      logService.getAllLogs(this.populateLogTable, this.handleError)
+    },
+    populateLogTable({ data }) {
+      this.handleResponse(data, () => {
+        this.$alert.addAlertList(this.alerts, 'info', data.messageList)
+        this.logTable.data = data.results
+      })
+    },
+    handleResponse(data, successFunc) {
+      if (data.successful) {
+        successFunc()
+      } else {
+        this.handleBusinessError(data)
+      }
+      this.isLoading = false
+    },
+    handleBusinessError(data) {
+      this.$alert.addAlertList(this.alerts, 'danger', data.messageList)
+    },
+    handleError(e) {
+      this.$alert.addError(this.alerts, e)
+      this.isLoading = false
     },
     clearAll() {
       this.$alert.clearAlerts(this.alerts)

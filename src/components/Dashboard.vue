@@ -242,7 +242,6 @@ export default {
       summaryService.getDailySummary(response => {
         this.parseSummaryResults(this.dailySummary, response)
         if (response.data.successful && this.dailySummary.rawData.length > 0) {
-          console.log('why')
           this.charts.dailyUsage = this.buildUsageCountChart(
             this.dailySummary.rawData,
             this.$options.filters.date
@@ -256,7 +255,6 @@ export default {
       summaryService.getHourlySummary(response => {
         this.parseSummaryResults(this.hourlySummary, response)
         if (response.data.successful && this.hourlySummary.rawData.length > 0) {
-          console.log('why')
           this.charts.hourlyUsage = this.buildUsageCountChart(
             this.hourlySummary.rawData,
             this.$options.filters.time
